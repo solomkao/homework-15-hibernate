@@ -23,12 +23,22 @@ create table users_books(
     foreign key (bookId) references books(id)
 )
 
+create table users_books(
+   id serial primary key,
+   userId integer,
+   bookId integer,
+   foreign key (userId) references users(id),
+   foreign key (bookId) references books(id),
+   unique (bookId,userId)
+)
+
 create table authors_books(
-    id serial primary key,
-    authorId integer,
-    bookId integer,
-    foreign key (authorId) references authors(id),
-    foreign key (bookId) references books(id)
+     id serial primary key,
+     authorId integer,
+     bookId integer,
+     foreign key (authorId) references authors(id),
+     foreign key (bookId) references books(id),
+     unique (authorId, bookId)
 )
 SELECT *
 FROM books

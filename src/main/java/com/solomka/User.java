@@ -1,12 +1,13 @@
 package com.solomka;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -15,7 +16,8 @@ public class User {
     private String name;
     @Column(name = "surname")
     private String surname;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "users_books",
             joinColumns = @JoinColumn(name = "userid"),
             inverseJoinColumns = @JoinColumn(name = "bookid"))
@@ -51,6 +53,18 @@ public class User {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public List<Book> getBookList() {
+        return bookList;
+    }
+
+    public void setBookList(List<Book> bookList) {
+        this.bookList = bookList;
+    }
+
+    public void addBook(Book book){
+        this.bookList.add(book);
     }
 
     @Override

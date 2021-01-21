@@ -1,12 +1,14 @@
 package com.solomka;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "authors")
-public class Author {
+public class Author implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -15,11 +17,12 @@ public class Author {
     private String name;
     @Column(name = "surname")
     private String surname;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "authors_books",
-            joinColumns = @JoinColumn(name = "bookid"),
-            inverseJoinColumns = @JoinColumn(name = "authorid"))
-    private List<Author> bookList = new ArrayList<>();
+            joinColumns = @JoinColumn(name = "authorid"),
+            inverseJoinColumns = @JoinColumn(name = "bookid"))
+    private List<Book> bookList = new ArrayList<>();
 
     public Author() {
     }
@@ -53,8 +56,33 @@ public class Author {
         this.surname = surname;
     }
 
+    public List<Book> getBookList() {
+        return bookList;
+    }
+
+    public void setBookList(List<Book> bookList) {
+        this.bookList = bookList;
+    }
+
+    public void addBook(Book book) {
+        this.bookList.add(book);
+    }
+
     @Override
     public String toString() {
-        return  name + ' ' + surname;
+        return name + ' ' + surname;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Author author = (Author) o;
+        return name.equals(author.name) && surname.equals(author.surname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, surname);
     }
 }
