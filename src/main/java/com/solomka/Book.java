@@ -1,6 +1,7 @@
 package com.solomka;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,14 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Component
 @Entity
 @Table(name = "books")
 public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
-    @Column(name = "title")
     private String title;
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "authors_books",
