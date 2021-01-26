@@ -16,14 +16,6 @@ create table users(
 )
 
 create table users_books(
-    id serial primary key,
-    userId integer,
-    bookId integer,
-    foreign key (userId) references users(id),
-    foreign key (bookId) references books(id)
-)
-
-create table users_books(
    id serial primary key,
    userId integer,
    bookId integer,
@@ -40,6 +32,7 @@ create table authors_books(
      foreign key (bookId) references books(id),
      unique (authorId, bookId)
 )
+
 SELECT *
 FROM books
          join authors_books ab on books.id = ab.bookid
@@ -48,10 +41,5 @@ FROM books
 where ub.userid = 1;
 
 select books.title, authors.name, authors.surname from books, authors, users, authors_books, users_books where
-        userid = 1 and users_books.userid = userid and users_books.bookid
-        = books.id and authors_books.authorid = authors.id and authors_books.bookid = books.id
-
-//garbage
-select * from books, authors, users, authors_books, users_books where
         userid = 1 and users_books.userid = userid and users_books.bookid
         = books.id and authors_books.authorid = authors.id and authors_books.bookid = books.id
